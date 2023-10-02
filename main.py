@@ -298,10 +298,37 @@ async def upload_files(docx_file: UploadFile = File(...), xlsx_file: UploadFile 
         delete_all_txt_files(".")
         return JSONResponse(content={
             "message": "Files uploaded successfully and modified",
-            "download_link": "https://doc-bot-service.onrender.com/download/completed"
+            "download_link": "https://doc-amount-server.onrender.com/download/completed"
             }, status_code=200)
     except Exception as e:
          return JSONResponse(content={"error": str(e)}, status_code=500)
+
+@app.get("/download/{folder_name}")
+async def download_folder(folder_name: str):
+    try:
+        folder_path = os.path.join("./", folder_name)
+
+        if not os.path.exists(folder_path):
+            raise HTTPException(status_code=404, detail="Folder not found")
+
+        # Create a temporary directory to store the zip archive
+        temp_dir = tempfile.mkdtemp()
+
+        # Create a zip file to store the folder contents
+        zip_filename = f"{folder_name}.zip"
+        zip_filepath = os.path.join(temp_dir, zip_filename)
+
+        with zipfile.ZipFile(zip_filepath, "w", zipfile.ZIP_DEFLATED) as zipf:
+            for root, _, files in os.walk(folder_path):
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    arcname = os.path.relpath(file_path, folder_path)
+                    zipf.write(file_path, arcname=arcname)
+
+        # Serve the zip archive for download
+        return FileResponse(zip_filepath, media_type='application/zip', filename=zip_filename)
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
 
 
 if __name__ == "__main__":
