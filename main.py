@@ -304,6 +304,10 @@ async def upload_files(docx_file: UploadFile = File(...), xlsx_file: UploadFile 
          return JSONResponse(content={"error": str(e)}, status_code=500)
 
 
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+
 # def open_docx_file(folder_path, file_name):
 #     # Construct the full path to the file
 #     file_path = os.path.join(folder_path, file_name)
