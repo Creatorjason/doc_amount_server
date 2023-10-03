@@ -296,7 +296,10 @@ async def upload_files(docx_file: UploadFile = File(...), xlsx_file: UploadFile 
             # root = os.path.abspath("completed")
             # file_path = f'{root}/{name}.docx'
             file_path = f'./{name}.docx'
-            os.remove(file_path)
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            else:
+                print("file not found")
         delete_all_txt_files(".")
         move_docx_files_to_thank_you_folder(".", "completed")
         return JSONResponse(content={
