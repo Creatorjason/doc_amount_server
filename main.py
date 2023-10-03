@@ -211,7 +211,8 @@ def delete_all_txt_files(directory_path):
         for txt_file in txt_files:
             # Construct the full file path
             file_path = os.path.join(directory_path, txt_file)
-
+            if txt_file == "requirements.txt":
+                continue
             # Delete the file
             os.remove(file_path)
 
@@ -293,7 +294,8 @@ async def upload_files(docx_file: UploadFile = File(...), xlsx_file: UploadFile 
         # open_docx_file("./completed")
         donor_names = extract_all_donor_name("filtered_names.csv")
         for name in donor_names:
-            file_path = f'./completed/{name}.docx'
+            root = os.path.abspath("completed")
+            file_path = f'{root}/{name}.docx'
             os.remove(file_path)
         delete_all_txt_files(".")
         return JSONResponse(content={
@@ -334,6 +336,8 @@ async def download_folder(folder_name: str):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+# if __name__ == "__main__":
+#     print(os.path.abspath("completed"))
 
 # def open_docx_file(folder_path, file_name):
 #     # Construct the full path to the file
@@ -352,7 +356,7 @@ if __name__ == "__main__":
 
 
 # if __name__ == '__main__':
-#     convert_doc_txt("thank.docx", "sample.txt")
+#     convert_doc_txt("amount_template.docx", "sample.txt")
 #     xlsx_to_csv("donations.xlsx", "donations.csv")
 #     clean_csv_file("donations.csv", "donations.csv")
 #     store_add_amount_users("donations.csv")
@@ -380,12 +384,14 @@ if __name__ == "__main__":
 #                 "Donor Name": name ,
 #                 "Donor Amount": formatted_amount}
 #             replace_words(name, str(amount))
-#             replace_content_after_date("thank.docx", text_file, docx_file, "")
+#             replace_content_after_date("amount_template.docx", text_file, docx_file, "")
 #             replace_words_in_docx(docx_file, replacements)
 # #             # replace_by_add_amount_flag(filename)
 #     move_docx_files_to_thank_you_folder(".", "completed")
 #     # open_docx_file("./completed")
 #     donor_names = extract_all_donor_name("filtered_names.csv")
 #     for name in donor_names:
-#         file_path = f'./completed/{name}.docx'
+#         root = os.path.abspath("completed")
+#         file_path = f'{root}/{name}.docx'
 #         os.remove(file_path)
+#     delete_all_txt_files("./")
