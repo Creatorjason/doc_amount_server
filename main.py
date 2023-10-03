@@ -295,7 +295,8 @@ async def upload_files(docx_file: UploadFile = File(...), xlsx_file: UploadFile 
         for name in donor_names:
             # root = os.path.abspath("completed")
             # file_path = f'{root}/{name}.docx'
-            file_path = f'./{name}.docx'
+            file = f'{name}.docx'
+            file_path = os.path.join(".", file)
             if os.path.exists(file_path):
                 os.remove(file_path)
             else:
