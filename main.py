@@ -289,15 +289,16 @@ async def upload_files(docx_file: UploadFile = File(...), xlsx_file: UploadFile 
                 replace_content_after_date("amount_template.docx", text_file, docx_file, "")
                 replace_words_in_docx(docx_file, replacements)
     #             # replace_by_add_amount_flag(filename)
-        move_docx_files_to_thank_you_folder(".", "completed")
         
         # open_docx_file("./completed")
         donor_names = extract_all_donor_name("filtered_names.csv")
         for name in donor_names:
-            root = os.path.abspath("completed")
-            file_path = f'{root}/{name}.docx'
+            # root = os.path.abspath("completed")
+            # file_path = f'{root}/{name}.docx'
+            file_path = f'./{name}.docx'
             os.remove(file_path)
         delete_all_txt_files(".")
+        move_docx_files_to_thank_you_folder(".", "completed")
         return JSONResponse(content={
             "message": "Files uploaded successfully and modified",
             "download_link": "https://doc-amount-server.onrender.com/download/completed"
